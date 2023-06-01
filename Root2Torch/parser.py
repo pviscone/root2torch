@@ -14,7 +14,11 @@ def parse(tree,var_dict,type="single"):
                 index=int(feat_split[1].split("]")[0])
                 new_column=torch.tensor(tree.arrays(feature)[feature][:,index,None].to_numpy()[:,:,None])
             else:
-                new_column=torch.tensor(np.atleast_3d(tree.arrays(feature)[feature].to_numpy()))
+                new_column=tree.arrays(feature)[feature].to_numpy(allow_missing=False)
+                if new_column.ndim==1:
+                    new_column=new_column[:,None]
+                new_column=np.reshape(new_column,(new_column.shape[0],new_column.shape[1],1))
+                new_column=torch.tensor(new_column)
                 if type=="couple":
                     n=int(np.sqrt(new_column.shape[1]))
                     new_column=torch.reshape(new_column,(new_column.shape[0],n,n,1))
