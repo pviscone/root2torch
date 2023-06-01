@@ -10,21 +10,28 @@ def parse(tree,var_dict,type="single"):
             feat_split=feature.split("[")
             print(feature)
             feature=feat_split[0]
+            ak_array=tree.arrays(feature)[feature]
             if len(feat_split)>1:
                 index=int(feat_split[1].split("]")[0])
-                new_column=torch.tensor(tree.arrays(feature)[feature][:,index,None].to_numpy()[:,:,None])
+                new_column=torch.tensor(ak_array[:,index,None].to_numpy()[:,:,None])
             else:
-                new_column=tree.arrays(feature)[feature].to_numpy(allow_missing=False)
-                if new_column.ndim==1:
-                    new_column=new_column[:,None]
-                new_column=np.reshape(new_column,(new_column.shape[0],new_column.shape[1],1))
+                shape0=len(ak_array)
+                if ak_array.ndim==1:
+                    new_column=ak_array.to_numpy()[:,None]
+                    shape1=1
+                else:
+                    new_column=np.array(ak_array.layout.content)
+                    shape1=ak_array.layout.offsets[1]
+
                 new_column=torch.tensor(new_column)
-                if type=="couple":
-                    n=int(np.sqrt(new_column.shape[1]))
-                    new_column=torch.reshape(new_column,(new_column.shape[0],n,n,1))
-                if type=="triplet":
-                    n=int(np.cbrt(new_column.shape[1]))
-                    new_column=torch.reshape(new_column,(new_column.shape[0],n,n,n,1))
+                if type=="single":
+                    new_column=torch.reshape(new_column,(shape0,shape1,1))
+                elif type=="couple":
+                    n=int(np.sqrt(shape1))
+                    new_column=torch.reshape(new_column,(shape0,n,n,1))
+                elif type=="triplet":
+                    n=int(np.cbrt(shape1))
+                    new_column=torch.reshape(new_column,(shape0,n,n,n,1))
             if idx==0:
                 res[key]=new_column
             else:
