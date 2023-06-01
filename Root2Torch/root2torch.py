@@ -88,20 +88,20 @@ if __name__=="__main__":
     singlet_dict={"Jet":["Jet_pt",
                     "Jet_phi",
                     "Jet_eta",
-                    "Jet_mass",
                     "Jet_btagDeepFlavB",
                     "Jet_btagDeepFlavCvB",
-                    "Jet_btagDeepFlavCvL",
-                    "Jet_TLeptMass"],
+                    "Jet_btagDeepFlavCvL"],
               "Lepton":["Muon_pt[0]",
                     "Muon_phi[0]",
                     "Muon_eta[0]"],
               "MET":["MET_pt",
                     "MET_phi",
-                    "MET_eta",
-                    "MET_WLeptMass"],
+                    "MET_eta"],
               }
-    couple_dict={"Jet_WHadMass":["Jet_WHadMass"],}
+    
+  #! PASS ALWAY VECTOR BEFORE SINGLE
+    couple_dict={"Masses":["Masses"],
+                 }
     #triplet_dict={"Jet_THadMass":["Jet_THadMass"],}
     triplet_dict={}
     
@@ -116,7 +116,7 @@ if __name__=="__main__":
         dataset.add_data(key,singlet[key],singlet_dict[key])
       
     for key in couple.keys():
-        dataset.add_data(key,couple[key],couple_dict[key])
+        dataset.add_data(key,couple[key],["LeptMasses","WHadMasses"])
         
     for key in triplet.keys():
         dataset.add_data(key,triplet[key],triplet_dict[key])
