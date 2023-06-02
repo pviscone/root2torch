@@ -36,4 +36,4 @@ test_dataset=nn.get_batch(int((1-test_size)*len(nn)),-1)
 
 torch.save(train_dataset,"../../Preselection_Skim/NN/train_Muons.pt")
 torch.save(test_dataset,"../../Preselection_Skim/NN/test_Muons.pt")
-torch.save(other_dataset,"../../Preselection_Skim/NN/test_Muons.pt")
+torch.save(other_dataset,"../../Preselection_Skim/NN/TTSemilept.pt")
