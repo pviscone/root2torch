@@ -93,7 +93,7 @@ class EventsDataset(Dataset):
             torch.tensor: Column of the dataset
         """
         obj=key.split("_")[0]
-        idx=np.where(np.array(self.info[obj])==key)
+        idx=np.where(np.array(self.info[obj])==key)[0]
         return self.data[obj][:,:,idx].squeeze()
     
     def shuffle(self,retrieve=False):
@@ -123,6 +123,8 @@ class EventsDataset(Dataset):
             EventsDataset: dataset containing the batch
         """
         batch=EventsDataset()
+        batch.info=copy.copy(self.info)
+        batch.additional_info=copy.copy(self.additional_info)
         for key in self.data.keys():
             if self.data[key] is None:
                 continue
