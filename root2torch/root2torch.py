@@ -13,7 +13,7 @@ The main attributes of the dataset are:
 - data (dict). In this dictionary are stored pytorch tensors
 - info (dict). In this dictionary (same keys of data dictionary) are stored info on the columns of the data tensors
 
-- additional_info (dict). Additional information defined by the user.
+- additional_info (dict). Additional information defined by the user. You can define functions in additional_data.py
 
 ## singlet_dict
 
