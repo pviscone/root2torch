@@ -1,6 +1,7 @@
 from torch.utils.data import Dataset
 import torch
-
+import numpy as np
+import copy
 class EventsDataset(Dataset):
     """Pytorch dataset based on dictionaries
 
@@ -20,7 +21,7 @@ class EventsDataset(Dataset):
         """Return the length of the dataset
 
         Returns:
-            _type_: int
+            int: Length of the dataset
         """
         key=list(self.data.keys())[0]
         return len(self.data[key])
@@ -30,7 +31,7 @@ class EventsDataset(Dataset):
         """ Return the element of the data dictionar
             dataset[key,idx/slice]
         Returns:
-            _type_: tensor
+            torch.tensor: tensor
         """
         return self.data[key_idx[0][0]][key_idx[0][1]]
     
@@ -38,9 +39,9 @@ class EventsDataset(Dataset):
         """Add data to the data dictionary
 
         Args:
-            name (_type_):key of the data dictionary
-            data (_type_): tensor data
-            column_info (_type_): description of the data columns
+            name (string):key of the data dictionary
+            data (torch.tensor): tensor data
+            column_info (List[String]): description of the data columns
         """
         self.data[name]=data
         self.info[name]=column_info
@@ -49,8 +50,8 @@ class EventsDataset(Dataset):
         """ Add auxiliary informations
 
         Args:
-            name (_type_): key of the dictionary
-            data (_type_): value of the dictionary
+            name (string): key of the dictionary
+            data (obj): value of the dictionary
         """
         self.additional_info[name]=data
     
@@ -61,7 +62,72 @@ class EventsDataset(Dataset):
             device (_type_): pytorch device
         """
         for key in self.data.keys():
+            if self.data[key] is None:
+                continue
             self.data[key]=self.data[key].to(device)
+    
+    def mask(self,mask,retrieve=False):
+        """Mask the data
+
+        Args:
+            mask (Tensor[Bool]): tensor of booleans of the same length of the dataset
+        """
+        mask=mask.squeeze()
+        if retrieve is True:
+            dataset=copy.deepcopy(self)
+            dataset.mask(mask)
+            return dataset
+        else:
+            for key in self.data.keys():
+                if self.data[key] is None:
+                    continue
+                self.data[key]=self.data[key][mask]
+            
+    def get(self,key):
+        """Get the data calling the key
+
+        Args:
+            key (string): Name of the column contained in dataset.info[object]
+
+        Returns:
+            torch.tensor: Column of the dataset
+        """
+        obj=key.split("_")[0]
+        idx=np.where(np.array(self.info[obj])==key)
+        return self.data[obj][:,:,idx].squeeze()
+    
+    def shuffle(self,retrieve=False):
+        """shuffle the data
+        """
+        if retrieve is True:
+            dataset=copy.deepcopy(self)
+            dataset.shuffle()
+            return dataset
+        else:
+            keys= list(self.data.keys())
+            idx=torch.randperm(self.data[keys[0]].shape[0])
+            for key in keys:
+                if self.data[key] is None:
+                    continue
+                idx=torch.randperm(self.data[key].shape[0])
+                self.data[key]=self.data[key][idx]
+            
+    def get_batch(self,start,end):
+        """Return a batch of the dataset
+
+        Args:
+            start (int): start index
+            end (int): end index
+
+        Returns:
+            EventsDataset: dataset containing the batch
+        """
+        batch=EventsDataset()
+        for key in self.data.keys():
+            if self.data[key] is None:
+                continue
+            batch.data[key]=self.data[key][start:end]
+        return batch
     
     def slice(self,start,end):
         """Select a slice of the data (on the first index) for all the keys
@@ -69,19 +135,45 @@ class EventsDataset(Dataset):
         
 
         Args:
-            start (_type_): start index
-            end (_type_): final index
+            start (int): start index
+            end (int): final index
         """
+
         for key in self.data.keys():
+            if self.data[key] is None:
+                continue
             self.data[key]=self.data[key][start:end]
     
-    def cat(self,dataset):
-        for key in self.data.keys():
-            self.data[key]=torch.cat((self.data[key],dataset.data[key]),dim=0)
+    def cat(self,dataset, retrieve=False):
+        
+        if retrieve is True:
+            ds=copy.deepcopy(self)
+            ds.cat(dataset)
+            return ds
+        else:
+            for key in self.data.keys():
+                if (self.data[key] is None):
+                    continue
+                if (key=="AdditionalPartons"):
+                    if (dataset.data[key].ndim==1):
+                        dataset.data[key]=(dataset.data[key]).unsqueeze(dim=1)
+                    if (self.data[key].ndim==1):
+                        self.data[key]=(self.data[key]).unsqueeze(dim=1)
+                    d1=dataset.data[key].shape[1]
+                    d2=self.data[key].shape[1]
+                    if d1<d2:
+                        dataset.data[key]=torch.nn.functional.pad(dataset.data[key],(0,d2-d1))
+                    else:
+                        self.data[key]=torch.nn.functional.pad(self.data[key],(0,d1-d2))
+                    
+                    
+                self.data[key]=torch.cat((self.data[key],dataset.data[key]),dim=0)
             
     def ls(self):
         """Print the keys and the shape of the data dictionary
         """
         for key in self.data.keys():
+            if self.data[key] is None:
+                continue
             print(f"key: {key}, shape: {self.data[key].shape}")
         
