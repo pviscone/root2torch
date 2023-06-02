@@ -70,21 +70,21 @@ if __name__=="__main__":
     tree=f["Events"]
     
     singlet_dict={"Jet":["Jet_pt",
-                    "Jet_phi",
-                    "Jet_eta",
-                    "Jet_btagDeepFlavB",
-                    "Jet_btagDeepFlavCvB",
-                    "Jet_btagDeepFlavCvL"],
+                        "Jet_phi",
+                        "Jet_eta",
+                        "Jet_btagDeepFlavB",
+                        "Jet_btagDeepFlavCvB",
+                        "Jet_btagDeepFlavCvL"],
               "Lepton":["Muon_pt[0]",
-                    "Muon_phi[0]",
-                    "Muon_eta[0]"],
-              "MET":["MET_pt",
-                    "MET_phi",
-                    "MET_eta"],
+                        "Muon_phi[0]",
+                        "Muon_eta[0]"],
+              "MET" : ["MET_pt",
+                        "MET_phi",
+                        "MET_eta"],
+              "Masses":["Masses"]
               }
     
-    couple_dict={"Masses":["Masses"],
-                 }
+    couple_dict={}
     #triplet_dict={"Jet_THadMass":["Jet_THadMass"],}
     triplet_dict={}
     
@@ -96,7 +96,11 @@ if __name__=="__main__":
 
     dataset=EventsDataset()
     for key in singlet.keys():
-        dataset.add_data(key,singlet[key],singlet_dict[key])
+        if key!="Masses":
+            dataset.add_data(key,singlet[key],singlet_dict[key])
+        else:
+            infos=["WLept"]+["TLept"]*7+["Jet"]+["WHad"]*6+["Jet"]+["WHad"]*5+["Jet"]+["WHad"]*4+["Jet"]+["WHad"]*3+["Jet"]+["WHad"]*2+["Jet"]+["WHad"]*1+["Jet"]
+            dataset.add_data(key,singlet[key],infos)
       
     for key in couple.keys():
         dataset.add_data(key,couple[key],["LeptMasses","WHadMasses"])
