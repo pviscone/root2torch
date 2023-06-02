@@ -1,13 +1,10 @@
 #%%
 
 import torch
-import torch_dataset
-import importlib
+from torch_dataset import EventsDataset
 
-EventsDataset=torch_dataset.EventsDataset
-importlib.reload(torch_dataset)
-EventsDataset=torch_dataset.EventsDataset
 
+#%%
 #Load signal and background datasets
 signal=torch.load("../../Preselection_Skim/signal/signal_MuonCuts.pt")
 powheg=torch.load("../../Preselection_Skim/powheg/TTSemiLept_powheg_MuonCuts.pt")
