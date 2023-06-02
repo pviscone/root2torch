@@ -11,7 +11,11 @@ EventsDataset=torch_dataset.EventsDataset
 #Load signal and background datasets
 signal=torch.load("../../Preselection_Skim/signal/signal_MuonCuts.pt")
 powheg=torch.load("../../Preselection_Skim/powheg/TTSemiLept_powheg_MuonCuts.pt")
+signal.shuffle()
+powheg.shuffle()
 n_sig=len(signal)
+
+
 
 #Select only muons in the background and add to the signal
 lepton_powheg=powheg.mask(torch.abs(powheg.data["LeptLabel"])==13, retrieve=True)
