@@ -51,7 +51,7 @@ Same of couple_dict but for (N_events,n^3) shaped objects
 """
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description=desc,
-                                  formatter_class=argparse.RawDescriptionHelpFormatter )
+                                formatter_class=argparse.RawDescriptionHelpFormatter )
 
     parser.add_argument("-i", "--input", help="Input root file name")
     parser.add_argument("-o", "--output", help="Output dataset file name")
@@ -63,6 +63,13 @@ if __name__=="__main__":
     output_file=args.output
     label=int(args.label)
     generator=args.generator
+    
+    """
+    root_file="../../Preselection_Skim/signal/BigMuons_MuonCuts.root"
+    output_file=""
+    label=1
+    generator="madgraph"
+    """
     
     assert generator in ["madgraph","powheg"]
     
