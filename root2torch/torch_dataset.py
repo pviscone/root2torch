@@ -81,7 +81,7 @@ class EventsDataset(Dataset):
             for key in self.data.keys():
                 if self.data[key] is None:
                     continue
-                self.data[key]=self.data[key][mask]
+                self.data[key]=self.data[key][mask].clone()
             
     def get(self,key):
         """Get the data calling the key
@@ -110,7 +110,7 @@ class EventsDataset(Dataset):
                 if self.data[key] is None:
                     continue
                 idx=torch.randperm(self.data[key].shape[0])
-                self.data[key]=self.data[key][idx]
+                self.data[key]=self.data[key][idx].clone()
             
     def get_batch(self,start,end):
         """Return a batch of the dataset
@@ -128,7 +128,7 @@ class EventsDataset(Dataset):
         for key in self.data.keys():
             if self.data[key] is None:
                 continue
-            batch.data[key]=self.data[key][start:end]
+            batch.data[key]=self.data[key][start:end].clone()
         return batch
     
     def slice(self,start,end):
@@ -144,7 +144,7 @@ class EventsDataset(Dataset):
         for key in self.data.keys():
             if self.data[key] is None:
                 continue
-            self.data[key]=self.data[key][start:end]
+            self.data[key]=self.data[key][start:end].clone()
     
     def cat(self,dataset, retrieve=False):
         
@@ -154,7 +154,7 @@ class EventsDataset(Dataset):
             return ds
         else:
             for key in self.data.keys():
-                if (self.data[key] is None):
+                if (self.data[key] is None or dataset.data[key] is None):
                     continue
                 if (key=="AdditionalPartons"):
                     if (dataset.data[key].ndim==1):
