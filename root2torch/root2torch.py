@@ -116,6 +116,7 @@ if __name__=="__main__":
         dataset.add_data(key,triplet[key],triplet_dict[key])
     
     dataset.add_data("label",label*torch.ones(singlet["Jet"].shape[0],1),["label"])
+    #dataset.add_data("pdgId",tree["LHEPart_pdgId"].array(),["pdgId"])
 
     dataset=add_additional_data(dataset,tree,additional_list=additional,generator=generator)
     dataset.add_additional_info("generator",generator)
