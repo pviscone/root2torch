@@ -30,12 +30,12 @@ def HadDecay(tree,generator):
     if generator=="powheg":
         had_decay=pdgId[:,4:]
         had_decay=had_decay[np.abs(had_decay)<5]
+        had_decay=torch.tensor(had_decay.to_numpy(),dtype=int)
+        had_decay=had_decay.reshape(n,2)
     elif generator=="madgraph":
         had_decay=pdgId[:,[3,4,6,7]]
         had_decay=had_decay[np.abs(had_decay)<6]
-    had_decay=torch.tensor(had_decay.to_numpy(),dtype=int)
-    #print(had_decay.shape)
-    had_decay=had_decay.reshape(n,had_decay.shape[1])
+        had_decay=torch.tensor(had_decay.to_numpy(),dtype=int)
     return had_decay
     
 def AdditionalPartons(tree,generator):
