@@ -82,14 +82,17 @@ if __name__=="__main__":
                         "Jet_btagDeepFlavB",
                         "Jet_btagDeepFlavCvB",
                         "Jet_btagDeepFlavCvL"],
-              "Lepton":["Muon_pt[0]",
-                        "Muon_phi[0]",
-                        "Muon_eta[0]"],
-              "MET" : ["MET_pt",
-                        "MET_phi",
-                        "MET_eta"],
-              "Masses":["Masses"]
-              }
+                "SecondLept":["SecondLept_pt",
+                              "SecondLept_phi",
+                              "SecondLept_eta"],
+                "Lepton":["Muon_pt[0]",
+                            "Muon_phi[0]",
+                            "Muon_eta[0]"],
+                "MET" : ["MET_pt",
+                            "MET_phi",
+                            "MET_eta"],
+                "Masses":["Masses"]
+                }
     
     couple_dict={}
     #triplet_dict={"Jet_THadMass":["Jet_THadMass"],}

@@ -10,10 +10,6 @@ signal=torch.load("../../Preselection_Skim/signal/signal_MuonCuts.pt")
 semiLept=torch.load("../../Preselection_Skim/powheg/TTSemiLept_MuonCuts.pt")
 diLept=torch.load("../../Preselection_Skim/diLept/TTdiLept_MuonCuts.pt")
 
-signal.add_data("type",torch.ones(len(signal)),["1 signal, 0 semiLeptBkg, -1 diLeptBkg"])
-semiLept.add_data("type",torch.zeros(len(semiLept)),["1 signal, 0 semiLeptBkg, -1 diLeptBkg"])
-diLept.add_data("type",torch.ones(len(diLept))*-1,["1 signal, 0 semiLeptBkg, -1 diLeptBkg"])
-
 signal.shuffle()
 semiLept.shuffle()
 diLept.shuffle()
