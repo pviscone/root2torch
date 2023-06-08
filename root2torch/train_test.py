@@ -19,18 +19,18 @@ n_train=int(n_sig*0.85)
 
 #Build training and test datasets
 train_signal=signal.get_batch(0,n_train)
-train_semiLept=semiLept.get_batch(0,n_train*3)
+train_semiLept=semiLept.get_batch(0,n_train*4)
 train_diLept=diLept.get_batch(0,n_train)
 train_dataset=train_signal.cat(train_diLept, retrieve=True)
 train_dataset=train_dataset.cat(train_semiLept, retrieve=True)
 
 test_signal=signal.get_batch(n_train,-1)
-test_semiLept=semiLept.get_batch(n_train*3,n_train*3+3*len(test_signal))
+test_semiLept=semiLept.get_batch(n_train*4,n_train*4+4*len(test_signal))
 test_diLept=diLept.get_batch(n_train,n_train+len(test_signal))
 test_dataset=test_signal.cat(test_diLept, retrieve=True)
 test_dataset=test_dataset.cat(test_semiLept, retrieve=True)
 
-other_semilept=semiLept.get_batch(n_train*3+3*len(test_signal),-1)
+other_semilept=semiLept.get_batch(n_train*4+4*len(test_signal),-1)
 other_diLept=diLept.get_batch(n_train+len(test_signal),-1)
 others=other_semilept.cat(other_diLept, retrieve=True)
 
