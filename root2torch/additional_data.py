@@ -28,9 +28,12 @@ def HadDecay(tree,generator):
     pdgId=tree["LHEPart_pdgId"].array()
     n=len(pdgId)
     if generator=="powheg":
-        had_decay=pdgId[:,4:]
-        had_decay=had_decay[np.abs(had_decay)<5]
-        had_decay=torch.tensor(had_decay.to_numpy(),dtype=int)
+        try:
+            had_decay=pdgId[:,4:]
+            had_decay=had_decay[np.abs(had_decay)<5]
+            had_decay=torch.tensor(had_decay.to_numpy(),dtype=int)
+        except ValueError:
+            had_decay=torch.tensor(np.zeros((n)))
     elif generator=="madgraph":
         had_decay=pdgId[:,[3,4,6,7]]
         had_decay=had_decay[np.abs(had_decay)<6]
