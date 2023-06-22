@@ -16,7 +16,7 @@ semiLept_test=torch.load("../../Preselection_Skim/NN/test/torch/TTSemiLept_test_
 diLept_test=torch.load("../../Preselection_Skim/NN/test/torch/TTdiLept_test_MuonCuts.pt")
 
 train_dataset=signal_train.cat(diLept_train, retrieve=True)
-train_dataset=train_dataset.cat(semiLept_test, retrieve=True)
+train_dataset=train_dataset.cat(semiLept_train, retrieve=True)
 
 test_dataset=signal_test.cat(diLept_test, retrieve=True)
 test_dataset=test_dataset.cat(semiLept_test, retrieve=True)
